@@ -7,8 +7,8 @@ module.exports = function(app, db) {
 
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
-      if (!results) {
-        res.send([])
+      if (err) {
+        res.send({'error': err});
       } else {
         res.send(results)
       }
@@ -33,7 +33,7 @@ module.exports = function(app, db) {
 
     db.collection('users').insertOne(user, (err, result) => {
       if (err) {
-        res.send({ 'error': err });
+        res.send({ 'error': err});
       } else {
         res.send(result.ops[0]);
       }
