@@ -5,6 +5,7 @@ const app         = express();
 const port        = process.env.PORT || 5000;
 const path        = require('path');
 const cors        = require('cors');
+const axios       = require('axios');
 
 require('dotenv').config();
 app.use(bodyParser.urlencoded({
@@ -34,3 +35,13 @@ MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }
     console.log('We are live on:' + port);
   });
 });
+
+// setInterval(() => {
+//   axios.get(process.env.RASPBERY_DATA_URL)
+//     .then(res => {
+//       console.log(res.data);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     })
+// }, 1000)

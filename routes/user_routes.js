@@ -29,10 +29,22 @@ module.exports = function(app, db) {
   });
 
   app.post('/users', (req, res) => {
-    console.log(req.body);
     if(!req.body) return res.sendStatus(400);
 
-    db.collection('users').insertMany(req.body, (err, result) => {
+    let users = req.body.map((elem, index) => {
+      return {
+        name: elem.name || '',
+        station_mac: elem.station_mac || '',
+        first_time_seen: elem.first_time_seen || '',
+        last_time_seen: elem.last_time_seen || '',
+        power: elem.power || '',
+        packets: elem.packets || '',
+        bssid: elem.bssid || '',
+        essids: elem.essids || ''
+      }
+    });
+
+    db.collection('users').insertMany(users, (err, result) => {
       if (err) {
         res.send(err);
       } else {
