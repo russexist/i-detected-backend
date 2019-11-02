@@ -8,7 +8,9 @@ module.exports = function(app, db) {
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
       if (err) {
-        res.send({'error': err});
+        res.send({
+          'error': err
+        });
       } else {
         res.send(results)
       }
@@ -17,11 +19,15 @@ module.exports = function(app, db) {
 
   app.get('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
+    const details = {
+      '_id': new ObjectID(id)
+    };
 
     db.collection('users').findOne(details, (err, item) => {
       if (err) {
-        res.send({'error': err});
+        res.send({
+          'error': err
+        });
       } else {
         res.send(item);
       }
@@ -29,11 +35,16 @@ module.exports = function(app, db) {
   });
 
   app.post('/users', (req, res) => {
-    const user = { name: req.body.name, macAddress: req.body.macAddress };
+    const user = {
+      name: req.body.name,
+      macAddress: req.body.macAddress
+    };
 
     db.collection('users').insertOne(user, (err, result) => {
       if (err) {
-        res.send({ 'error': err});
+        res.send({
+          'error': err
+        });
       } else {
         res.send(result.ops[0]);
       }
@@ -42,25 +53,36 @@ module.exports = function(app, db) {
 
   app.put('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
-    const user = { text: req.body.name, title: req.body.macAddress };
+    const details = {
+      '_id': new ObjectID(id)
+    };
+    const user = {
+      text: req.body.name,
+      title: req.body.macAddress
+    };
 
     db.collection('users').update(details, user, (err, result) => {
       if (err) {
-          res.send({'error': err});
+        res.send({
+          'error': err
+        });
       } else {
-          res.send(user);
+        res.send(user);
       }
     });
   });
 
   app.delete('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
+    const details = {
+      '_id': new ObjectID(id)
+    };
 
     db.collection('users').remove(details, (err, item) => {
       if (err) {
-        res.send({'error':err});
+        res.send({
+          'error': err
+        });
       } else {
         res.send('User ' + id + ' deleted!');
       }
