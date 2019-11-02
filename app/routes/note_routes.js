@@ -7,7 +7,11 @@ module.exports = function(app, db) {
 
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
-      res.send(results)
+      if (!results) {
+        res.send([])
+      } else {
+        res.send(results)
+      }
     });
   });
 
