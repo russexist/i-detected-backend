@@ -53,8 +53,14 @@ module.exports = function(app, db) {
     const id = req.params.id;
     const details = { '_id': new ObjectID(id) };
     const user = {
-      text: req.body.name,
-      title: req.body.macAddress
+      name: req.body.name,
+      station_mac: req.body.station_mac,
+      first_time_seen: req.body.first_time_seen,
+      last_time_seen: req.body.last_time_seen,
+      power: req.body.power,
+      packets: req.body.packets,
+      bssid: req.body.bssid,
+      essids: req.body.essids
     };
 
     db.collection('users').update(details, user, (err, result) => {
