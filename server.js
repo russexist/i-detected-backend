@@ -14,8 +14,8 @@ app.use(function(request, response, next) {
   let hour = now.getHours();
   let minutes = now.getMinutes();
   let seconds = now.getSeconds();
-  let data = `${hour}:${minutes}:${seconds} ${request.method} ${request.url} ${request.get("user-agent")}`;
-  console.log(data);
+  let data = `${hour}:${minutes}:${seconds} ${request.method} ${request.url} | ${request.get("user-agent")}`;
+  console.log();
   next();
 });
 

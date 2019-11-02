@@ -8,9 +8,7 @@ module.exports = function(app, db) {
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
       if (err) {
-        res.send({
-          'error': err
-        });
+        res.send(err);
       } else {
         res.send(results)
       }
@@ -19,15 +17,11 @@ module.exports = function(app, db) {
 
   app.get('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = {
-      '_id': new ObjectID(id)
-    };
+    const details = { '_id': new ObjectID(id) };
 
     db.collection('users').findOne(details, (err, item) => {
       if (err) {
-        res.send({
-          'error': err
-        });
+        res.send(err);
       } else {
         res.send(item);
       }
@@ -42,9 +36,7 @@ module.exports = function(app, db) {
 
     db.collection('users').insertOne(user, (err, result) => {
       if (err) {
-        res.send({
-          'error': err
-        });
+        res.send(err);
       } else {
         res.send(result.ops[0]);
       }
@@ -53,9 +45,7 @@ module.exports = function(app, db) {
 
   app.put('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = {
-      '_id': new ObjectID(id)
-    };
+    const details = { '_id': new ObjectID(id) };
     const user = {
       text: req.body.name,
       title: req.body.macAddress
@@ -63,9 +53,7 @@ module.exports = function(app, db) {
 
     db.collection('users').update(details, user, (err, result) => {
       if (err) {
-        res.send({
-          'error': err
-        });
+        res.send(err);
       } else {
         res.send(user);
       }
@@ -74,15 +62,11 @@ module.exports = function(app, db) {
 
   app.delete('/users/:id', (req, res) => {
     const id = req.params.id;
-    const details = {
-      '_id': new ObjectID(id)
-    };
+    const details = { '_id': new ObjectID(id) };
 
     db.collection('users').remove(details, (err, item) => {
       if (err) {
-        res.send({
-          'error': err
-        });
+        res.send(err);
       } else {
         res.send('User ' + id + ' deleted!');
       }
