@@ -24,11 +24,6 @@ app.use(function(request, response, next) {
   next();
 });
 
-app.post('/test1', (req, res) => {
-  console.log(req.body);
-  res.send('ok');
-})
-
 MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.log(err)
 

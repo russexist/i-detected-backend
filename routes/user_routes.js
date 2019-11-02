@@ -1,9 +1,5 @@
 var ObjectID = require('mongodb').ObjectID;
 
-const express = require("express");
-const app = express();
-const jsonParser = express.json();
-
 module.exports = function(app, db) {
   app.get('/', (req, res) => {
     res.redirect('users')
@@ -33,6 +29,7 @@ module.exports = function(app, db) {
   });
 
   app.post('/users', (req, res) => {
+    console.log(req.body);
     if(!req.body) return res.sendStatus(400);
 
     db.collection('users').insertMany(req.body, (err, result) => {
