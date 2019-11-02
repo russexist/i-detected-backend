@@ -1,5 +1,9 @@
 var ObjectID = require('mongodb').ObjectID;
 
+const express = require("express");
+const app = express();
+const jsonParser = express.json();
+
 module.exports = function(app, db) {
   app.get('/', (req, res) => {
     res.redirect('users')
@@ -29,18 +33,9 @@ module.exports = function(app, db) {
   });
 
   app.post('/users', (req, res) => {
-    const user = {
-      name: req.body.name,
-      station_mac: req.body.station_mac,
-      first_time_seen: req.body.first_time_seen,
-      last_time_seen: req.body.last_time_seen,
-      power: req.body.power,
-      packets: req.body.packets,
-      bssid: req.body.bssid,
-      essids: req.body.essids
-    };
+    if(!req.body) return res.sendStatus(400);
 
-    db.collection('users').insertOne(user, (err, result) => {
+    db.collection('users').insertMany(req.body, (err, result) => {
       if (err) {
         res.send(err);
       } else {
@@ -63,7 +58,7 @@ module.exports = function(app, db) {
       essids: req.body.essids
     };
 
-    db.collection('users').update(details, user, (err, result) => {
+    db.collection('users').updateOne(details, user, (err, result) => {
       if (err) {
         res.send(err);
       } else {

@@ -8,8 +8,9 @@ const cors        = require('cors');
 
 require('dotenv').config();
 app.use(bodyParser.urlencoded({
-  extended: true
+  extended: false
 }));
+app.use(bodyParser.json());
 
 app.use(cors());
 
@@ -22,6 +23,11 @@ app.use(function(request, response, next) {
   console.log();
   next();
 });
+
+app.post('/test1', (req, res) => {
+  console.log(req.body);
+  res.send('ok');
+})
 
 MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.log(err)
