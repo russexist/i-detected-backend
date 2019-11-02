@@ -7,7 +7,7 @@ const port           = 3000;
 require('dotenv').config();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-MongoClient.connect(process.env.DB_URL, { useUnifiedTopology: true }, (err, client) => {
+MongoClient.connect(process.env.MONGODB_URI, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.log(err)
 
   let database = client.db("test");
