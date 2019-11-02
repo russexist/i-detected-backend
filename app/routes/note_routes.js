@@ -21,7 +21,7 @@ module.exports = function(app, db) {
 
     db.collection('users').findOne(details, (err, item) => {
       if (err) {
-        res.send({'error':'An error has occurred'});
+        res.send({'error': err});
       } else {
         res.send(item);
       }
@@ -33,7 +33,7 @@ module.exports = function(app, db) {
 
     db.collection('users').insertOne(user, (err, result) => {
       if (err) {
-        res.send({ 'error': 'An error has occurred' });
+        res.send({ 'error': err });
       } else {
         res.send(result.ops[0]);
       }
@@ -43,13 +43,13 @@ module.exports = function(app, db) {
   app.put('/users/:id', (req, res) => {
     const id = req.params.id;
     const details = { '_id': new ObjectID(id) };
-    const note = { text: req.body.name, title: req.body.macAddress };
+    const user = { text: req.body.name, title: req.body.macAddress };
 
-    db.collection('users').update(details, note, (err, result) => {
+    db.collection('users').update(details, user, (err, result) => {
       if (err) {
-          res.send({'error':'An error has occurred'});
+          res.send({'error': err});
       } else {
-          res.send(note);
+          res.send(user);
       }
     });
   });
@@ -60,9 +60,9 @@ module.exports = function(app, db) {
 
     db.collection('users').remove(details, (err, item) => {
       if (err) {
-        res.send({'error':'An error has occurred'});
+        res.send({'error':err});
       } else {
-        res.send('Note ' + id + ' deleted!');
+        res.send('User ' + id + ' deleted!');
       }
     });
   });
