@@ -20,7 +20,7 @@ app.use(function(request, response, next){
 MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.log(err)
 
-  let database = client.db("test");
+  let database = client.db(process.env.DATABASE_NAME);
   require('./app/routes')(app, database);
 
   app.listen(port, () => {
