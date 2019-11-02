@@ -10,6 +10,7 @@ const axios       = require('axios');
 
 global.axios = axios;
 global.io = io;
+global.path = path;
 
 require('dotenv').config();
 
