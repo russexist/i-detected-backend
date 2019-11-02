@@ -31,7 +31,7 @@ module.exports = function(app, db) {
   app.post('/users', (req, res) => {
     const user = { name: req.body.name, macAddress: req.body.macAddress };
 
-    db.collection('users').insert(user, (err, result) => {
+    db.collection('users').insertOne(user, (err, result) => {
       if (err) {
         res.send({ 'error': 'An error has occurred' });
       } else {
