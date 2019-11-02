@@ -1,13 +1,17 @@
-const express = require('express');
+const express     = require('express');
 const MongoClient = require('mongodb').MongoClient;
-const bodyParser = require('body-parser');
-const app = express();
-const port = process.env.PORT || 5000;
+const bodyParser  = require('body-parser');
+const app         = express();
+const port        = process.env.PORT || 5000;
+const path        = require('path');
+const cors        = require('cors');
 
 require('dotenv').config();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+app.use(cors());
 
 app.use(function(request, response, next) {
   let now = new Date();
@@ -23,7 +27,7 @@ MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }
   if (err) return console.log(err)
 
   let database = client.db(process.env.DATABASE_NAME);
-  require('./app/routes')(app, database);
+  require('./routes')(app, database);
 
   app.listen(port, () => {
     console.log('We are live on:' + port);
