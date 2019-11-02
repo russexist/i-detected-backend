@@ -1,17 +1,34 @@
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = function(app, db) {
+  setInterval(() => {
+    axios.get(process.env.RASPBERY_DATA_URL)
+      .then(res => {
+        // console.log('----------------------------------------');
+        let macAddresses = res.data.map((elem, index) => {
+          return elem.station_mac
+        });
+
+        db.collection('users').find(
+          { station_mac: { $in: macAddresses } }
+          // { station_mac: { $in: macAddresses }, $and: [{ power:  { $ne: [0, -1, '', '0', '-1'] } }] }
+        ).sort({ power: -1 }).toArray((err, users) => {
+          io.emit('data-list', users)
+          // console.log(users);
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, 3000);
+
   app.get('/', (req, res) => {
-    res.redirect('users')
+    res.send('index page')
   });
 
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(results)
-      }
+      res.send(err ? err : results);
     });
   });
 
@@ -20,11 +37,7 @@ module.exports = function(app, db) {
     const details = { '_id': new ObjectID(id) };
 
     db.collection('users').findOne(details, (err, item) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(item);
-      }
+      res.send(err ? err : item);
     });
   });
 
@@ -45,11 +58,7 @@ module.exports = function(app, db) {
     });
 
     db.collection('users').insertMany(users, (err, result) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(result.ops[0]);
-      }
+      res.send(err ? err : result.ops[0]);
     });
   });
 
@@ -68,11 +77,7 @@ module.exports = function(app, db) {
     };
 
     db.collection('users').updateOne(details, user, (err, result) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(user);
-      }
+      res.send(err ? err : user);
     });
   });
 
@@ -81,11 +86,7 @@ module.exports = function(app, db) {
     const details = { '_id': new ObjectID(id) };
 
     db.collection('users').deleteOne(details, (err, item) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send('User ' + id + ' deleted!');
-      }
+      res.send(err ? err : `User ${id} deleted!`);
     });
   });
 };

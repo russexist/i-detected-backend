@@ -1,18 +1,20 @@
-const express     = require('express');
+const app         = require('express')();
+const http        = require('http').createServer(app);
+const io          = require('socket.io')(http);
+const port        = process.env.PORT || 5000;
 const MongoClient = require('mongodb').MongoClient;
 const bodyParser  = require('body-parser');
-const app         = express();
-const port        = process.env.PORT || 5000;
 const path        = require('path');
 const cors        = require('cors');
 const axios       = require('axios');
 
-require('dotenv').config();
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
-app.use(bodyParser.json());
+global.axios = axios;
+global.io = io;
 
+require('dotenv').config();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(cors());
 
 app.use(function(request, response, next) {
@@ -31,17 +33,19 @@ MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }
   let database = client.db(process.env.DATABASE_NAME);
   require('./routes')(app, database);
 
-  app.listen(port, () => {
+  http.listen(port, () => {
     console.log('We are live on:' + port);
   });
 });
 
-// setInterval(() => {
-//   axios.get(process.env.RASPBERY_DATA_URL)
-//     .then(res => {
-//       console.log(res.data);
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     })
-// }, 1000)
+// io.on('connection', function(socket){
+//   // io.emit('data-list', [])
+//   socket.on('data-list', function(msg){
+//     console.log(msg);
+//     // io.emit('chat message', msg);
+//   });
+// });
+
+// app.get('/', function(req, res){
+//   res.sendFile(path.resolve() + '/views/index.html');
+// });
