@@ -88,7 +88,7 @@ module.exports = function(app, db) {
       text_color: req.body.text_color
     };
 
-    db.collection("users").updateOne(details, user, (err, result) => {
+    db.collection("users").updateOne(details, { $set: user }, (err, result) => {
       res.send(err ? err : user);
     });
   });
