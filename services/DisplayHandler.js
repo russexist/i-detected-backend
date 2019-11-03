@@ -16,7 +16,7 @@ function init() {
     });
     const sortedData = newData
       .sort((a, b) => (a.signal < b.signal ? 1 : -1))
-      .filter(item => item.signal >= -50 && item.since <= 30000)
+      .filter(item => item.signal >= -50 && item.since <= 15000)
       .map(item => {
         const userDetails = UsersManager.getUserByMac(item.mac);
         return {
