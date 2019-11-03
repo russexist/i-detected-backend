@@ -7,6 +7,7 @@ const bodyParser  = require('body-parser');
 const path        = require('path');
 const cors        = require('cors');
 const axios       = require('axios');
+const { usersUpdaterStart }          = require('./services/users-updater');
 
 global.axios = axios;
 global.io = io;
@@ -24,15 +25,17 @@ app.use(function(request, response, next) {
   let minutes = now.getMinutes();
   let seconds = now.getSeconds();
   let data = `${hour}:${minutes}:${seconds} ${request.method} ${request.url} | ${request.get("user-agent")}`;
-  console.log();
+  console.log(data);
   next();
 });
 
 MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }, (err, client) => {
-  if (err) return console.log(err)
+  if (err) return console.log(err);
 
-  let database = client.db(process.env.DATABASE_NAME);
+  const database = client.db(process.env.DATABASE_NAME);
   require('./routes')(app, database);
+  usersUpdaterStart(database);
+  
 
   http.listen(port, () => {
     console.log('We are live on:' + port);

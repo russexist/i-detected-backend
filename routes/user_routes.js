@@ -1,28 +1,6 @@
-var ObjectID = require('mongodb').ObjectID;
+const ObjectID = require('mongodb').ObjectID;
 
 module.exports = function(app, db) {
-  setInterval(() => {
-    axios.get(process.env.RASPBERY_DATA_URL)
-      .then(res => {
-        console.log('----------------------------------------');
-        let macAddresses = res.data.map((elem, index) => {
-          return elem.station_mac.toUpperCase();
-        });
-
-        console.log(macAddresses.length);
-
-        // { station_mac: { $in: macAddresses }, $and: [{ power:  { $ne: [0, -1, '', '0', '-1'] } }] }
-        db.collection('users').find({ station_mac: { $in: macAddresses } })
-          .sort({ power: -1 }).toArray((err, users) => {
-            io.emit('data-list', users);
-            console.log(users);
-          });
-      })
-      .catch(err => {
-        console.log('Raspberry: Connection Error!');
-      });
-  }, 1000);
-
   app.get('/', (req, res) => {
     res.sendFile(path.resolve() + '/views/index.html');
   });
