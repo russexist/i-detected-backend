@@ -1,4 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
+const fs = require('fs');
 
 module.exports = function(app, db) {
   app.get('/', (req, res) => {
@@ -7,9 +8,29 @@ module.exports = function(app, db) {
 
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
-      res.send(err ? err : results);
+      let result = results.map((elem, index) => {
+        return {
+          id: elem._id,
+          station_mac: elem.station_mac,
+          text: elem.text,
+          text_color: elem.text_color,
+          // image: function() {
+          //   fs.readFile(path.resolve() + `/uploads/${elem._id}.jpg`, (err, file) => {
+          //     return
+          //   });
+          }
+        }
+      });
+      res.send(err ? err : result);
     });
   });
+
+  app.get('/image/:id', (req, res) => {
+    const fileName = req.params.name;
+    fs.readFile(path.resolve() + '/uploads/' + fileName + '.jpg', (err, file) => {
+      if (err) res.status(500)
+    })
+  })
 
   app.get('/users/:id', (req, res) => {
     const id = req.params.id;
@@ -23,6 +44,7 @@ module.exports = function(app, db) {
   app.post('/users', (req, res) => {
     if(!req.body) return res.sendStatus(400);
 
+    console.log(req.body);
     let users = req.body.map((elem, index) => {
       return {
         name: elem.name || '',
@@ -40,6 +62,23 @@ module.exports = function(app, db) {
 
     db.collection('users').insertMany(users, (err, result) => {
       res.send(err ? err : result.ops[0]);
+    });
+  });
+
+  app.patch('/users/:id/upload', (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No files were uploaded.');
+    }
+
+    let file = req.files.file;
+    let index = file.name.split('.').length - 1;
+    let fileFormat = file.name.split('.')[index];
+
+    file.mv(`${path.resolve()}/uploads/${req.params.id}.${fileFormat}`, function(err) {
+      if (err)
+        return res.status(500).send(err);
+
+      res.send('File uploaded!');
     });
   });
 

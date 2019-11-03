@@ -7,17 +7,22 @@ const bodyParser  = require('body-parser');
 const path        = require('path');
 const cors        = require('cors');
 const axios       = require('axios');
-const { usersUpdaterStart }          = require('./services/users-updater');
+const fileUpload  = require('express-fileupload');
+const fs          = require('fs');
+
+const { usersUpdaterStart } = require('./services/users-updater');
 
 global.axios = axios;
 global.io = io;
 global.path = path;
+global.fs = fs;
 
 require('dotenv').config();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(fileUpload());
 
 app.use(function(request, response, next) {
   let now = new Date();
@@ -35,7 +40,7 @@ MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }
   const database = client.db(process.env.DATABASE_NAME);
   require('./routes')(app, database);
   usersUpdaterStart(database);
-  
+
 
   http.listen(port, () => {
     console.log('We are live on:' + port);
