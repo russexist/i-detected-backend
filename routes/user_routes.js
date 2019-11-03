@@ -6,24 +6,24 @@ module.exports = function(app, db) {
     res.sendFile(path.resolve() + '/views/index.html');
   });
 
-  app.get('/users', (req, res) => {
-    db.collection('users').find().toArray(function(err, results) {
-      let result = results.map((elem, index) => {
-        return {
-          id: elem._id,
-          station_mac: elem.station_mac,
-          text: elem.text,
-          text_color: elem.text_color,
-          // image: function() {
-          //   fs.readFile(path.resolve() + `/uploads/${elem._id}.jpg`, (err, file) => {
-          //     return
-          //   });
-          }
-        }
-      });
-      res.send(err ? err : result);
-    });
-  });
+  // app.get('/users', (req, res) => {
+  //   db.collection('users').find().toArray(function(err, results) {
+  //     let result = results.map((elem, index) => {
+  //       return {
+  //         id: elem._id,
+  //         station_mac: elem.station_mac,
+  //         text: elem.text,
+  //         text_color: elem.text_color,
+  //         // image: function() {
+  //         //   fs.readFile(path.resolve() + `/uploads/${elem._id}.jpg`, (err, file) => {
+  //         //     return
+  //         //   });
+  //         }
+  //       }
+  //     });
+  //     res.send(err ? err : result);
+  //   });
+  // });
 
   app.get('/image/:id', (req, res) => {
     const fileName = req.params.name;
