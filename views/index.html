@@ -1,24 +1,24 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>I Detected UI</title>
+    <link rel="stylesheet" href="lib/animate.css" />
+    <link rel="stylesheet" href="stylesheets/anim.css" />
+    <link rel="stylesheet" href="stylesheets/styles.css" />
   </head>
   <body>
-    <h2 style="text-align:center;">Users</h2>
-    <ul id="users"></ul>
+    <div class="container">
+      <div class="default-view"></div>
+      <div class="pic-view"></div>
+      <div class="text-view"></div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-
-    <script>
-      $(function () {
-        var socket = io();
-
-        socket.on('data-list', function(msg){
-          $('#users').html('');
-          console.log(msg);
-          $('#users').append($('<li>').text(`user: ${elem.name} ${elem.mac} ${elem.signal}`));
-        });
-      });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="javascripts/main.js"></script>
+    <script src="javascripts/application.js"></script>
   </body>
 </html>

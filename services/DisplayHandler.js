@@ -30,6 +30,7 @@ function init() {
     // .forEach(item => {
     //   console.log(item);
     // });
+    console.log(sortedData);
     if (sortedData.length) {
       if (Date.now() - lastCommandSent >= 5000) {
         io.emit("show", sortedData[0]);
