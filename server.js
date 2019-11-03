@@ -54,6 +54,8 @@ MongoClient.connect(
     UsersManager.update();
     DisplayHandler.init();
 
+    setInterval(() => UsersManager.update(), 10 * 1000);
+
     http.listen(port, () => {
       console.log("We are live on:" + port);
     });
