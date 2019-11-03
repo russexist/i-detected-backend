@@ -38,15 +38,3 @@ MongoClient.connect(process.env.MONGOLAB_OLIVE_URI, { useUnifiedTopology: true }
     console.log('We are live on:' + port);
   });
 });
-
-// io.on('connection', function(socket){
-//   // io.emit('data-list', [])
-//   socket.on('data-list', function(msg){
-//     console.log(msg);
-//     // io.emit('chat message', msg);
-//   });
-// });
-
-// app.get('/', function(req, res){
-//   res.sendFile(path.resolve() + '/views/index.html');
-// });
