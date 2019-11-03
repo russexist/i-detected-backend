@@ -8,29 +8,9 @@ module.exports = function(app, db) {
 
   app.get('/users', (req, res) => {
     db.collection('users').find().toArray(function(err, results) {
-      let result = results.map((elem, index) => {
-        return {
-          id: elem._id,
-          station_mac: elem.station_mac,
-          text: elem.text,
-          text_color: elem.text_color,
-          // image: function() {
-          //   fs.readFile(path.resolve() + `/uploads/${elem._id}.jpg`, (err, file) => {
-          //     return
-          //   });
-          }
-        }
-      });
-      res.send(err ? err : result);
+      res.send(err ? err : results);
     });
   });
-
-  app.get('/image/:id', (req, res) => {
-    const fileName = req.params.name;
-    fs.readFile(path.resolve() + '/uploads/' + fileName + '.jpg', (err, file) => {
-      if (err) res.status(500)
-    })
-  })
 
   app.get('/users/:id', (req, res) => {
     const id = req.params.id;
@@ -44,17 +24,10 @@ module.exports = function(app, db) {
   app.post('/users', (req, res) => {
     if(!req.body) return res.sendStatus(400);
 
-    console.log(req.body);
     let users = req.body.map((elem, index) => {
       return {
         name: elem.name || '',
         station_mac: elem.station_mac || '',
-        first_time_seen: elem.first_time_seen || '',
-        last_time_seen: elem.last_time_seen || '',
-        power: elem.power || '',
-        packets: elem.packets || '',
-        bssid: elem.bssid || '',
-        essids: elem.essids || '',
         text: elem.text || '',
         text_color: elem.text_color || ''
       }
