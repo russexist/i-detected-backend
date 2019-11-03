@@ -11,11 +11,14 @@ const fs = require("fs");
 const WifiState = require("./services/WifiState");
 const UsersUpdater = require("./services/users-updater");
 const fileUpload = require("express-fileupload");
+const UsersManager = require("./services/UsersManager");
+const DisplayHandler = require("./services/DisplayHandler");
 
 global.axios = axios;
 global.io = io;
 global.path = path;
 global.fs = fs;
+global.db;
 
 require("dotenv").config();
 
@@ -43,10 +46,13 @@ MongoClient.connect(
     if (err) return console.log(err);
 
     const database = client.db(process.env.DATABASE_NAME);
+    global.db = database;
     require("./routes")(app, database);
     // usersUpdaterStart(database);
     UsersUpdater.init(database);
     WifiState.init();
+    UsersManager.update();
+    DisplayHandler.init();
 
     http.listen(port, () => {
       console.log("We are live on:" + port);
