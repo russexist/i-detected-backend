@@ -7,10 +7,10 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const axios = require("axios");
-const fileUpload = require("express-fileupload");
 const fs = require("fs");
 const WifiState = require("./services/WifiState");
 const UsersUpdater = require("./services/users-updater");
+const fileUpload = require("express-fileupload");
 
 global.axios = axios;
 global.io = io;
@@ -22,7 +22,7 @@ require("dotenv").config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(fileUpload());
+app.use(fileUpload({}));
 
 app.use(function(request, response, next) {
   let now = new Date();

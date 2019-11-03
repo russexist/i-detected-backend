@@ -24,6 +24,7 @@ module.exports = function(app, db) {
   //     res.send(err ? err : result);
   //   });
   // });
+
   app.get("/users", (req, res) => {
     db.collection("users")
       .find()
@@ -59,22 +60,15 @@ module.exports = function(app, db) {
   });
 
   app.patch("/users/:id/upload", (req, res) => {
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send("No files were uploaded.");
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).send("No files were uploaded");
     }
 
-    let file = req.files.file;
-    let index = file.name.split(".").length - 1;
-    let fileFormat = file.name.split(".")[index];
-
-    file.mv(
-      `${path.resolve()}/uploads/${req.params.id}.${fileFormat}`,
-      function(err) {
-        if (err) return res.status(500).send(err);
-
-        res.send("File uploaded!");
-      }
-    );
+    const file = req.files.pic;
+    file.mv(`${path.resolve()}/uploads/${file.name}`, err => {
+      if (err) res.status(500).send(err.message);
+      else res.send("ok");
+    });
   });
 
   app.put("/users/:id", (req, res) => {
