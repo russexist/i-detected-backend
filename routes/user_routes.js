@@ -42,6 +42,11 @@ module.exports = function(app, db) {
     });
   });
 
+  app.get("/uploads/:file_name", (req, res) => {
+    const fileName = req.params.file_name;
+    res.sendFile(`${path.resolve()}/uploads/${fileName}`);
+  });
+
   app.post("/users", (req, res) => {
     if (!req.body) return res.sendStatus(400);
 
