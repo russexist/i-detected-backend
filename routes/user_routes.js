@@ -6,30 +6,18 @@ module.exports = function(app, db) {
     res.sendFile(path.resolve() + "/views/index.html");
   });
 
-  // app.get('/users', (req, res) => {
-  //   db.collection('users').find().toArray(function(err, results) {
-  //     let result = results.map((elem, index) => {
-  //       return {
-  //         id: elem._id,
-  //         station_mac: elem.station_mac,
-  //         text: elem.text,
-  //         text_color: elem.text_color,
-  //         // image: function() {
-  //         //   fs.readFile(path.resolve() + `/uploads/${elem._id}.jpg`, (err, file) => {
-  //         //     return
-  //         //   });
-  //         }
-  //       }
-  //     });
-  //     res.send(err ? err : result);
-  //   });
-  // });
-
   app.get("/users", (req, res) => {
     db.collection("users")
       .find()
       .toArray(function(err, results) {
-        res.send(err ? err : results);
+        res.send(
+          err
+            ? err
+            : results.map(item => ({
+                ...item,
+                pic: item.pic || ""
+              }))
+        );
       });
   });
 
@@ -44,6 +32,7 @@ module.exports = function(app, db) {
 
   app.get("/uploads/:file_name", (req, res) => {
     const fileName = req.params.file_name;
+    console.log(fileName);
     res.sendFile(`${path.resolve()}/uploads/${fileName}`);
   });
 
@@ -69,10 +58,23 @@ module.exports = function(app, db) {
       return res.status(400).send("No files were uploaded");
     }
 
+    const id = req.params.id;
+
     const file = req.files.pic;
-    file.mv(`${path.resolve()}/uploads/${file.name}`, err => {
+    const fileDstPath = `${path.resolve()}/uploads/${file.name}`;
+    file.mv(fileDstPath, err => {
       if (err) res.status(500).send(err.message);
-      else res.send("ok");
+      else {
+        const details = { _id: new ObjectID(id) };
+        db.collection("users").updateOne(
+          details,
+          { $set: { pic: file.name } },
+          (err, result) => {
+            if (err) res.status(500).send(err.message);
+            else res.send("ok");
+          }
+        );
+      }
     });
   });
 
