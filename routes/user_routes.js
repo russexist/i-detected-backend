@@ -1,9 +1,9 @@
-const ObjectID = require('mongodb').ObjectID;
-const fs = require('fs');
+const ObjectID = require("mongodb").ObjectID;
+const fs = require("fs");
 
 module.exports = function(app, db) {
-  app.get('/', (req, res) => {
-    res.sendFile(path.resolve() + '/views/index.html');
+  app.get("/", (req, res) => {
+    res.sendFile(path.resolve() + "/views/index.html");
   });
 
   // app.get('/users', (req, res) => {
@@ -24,67 +24,62 @@ module.exports = function(app, db) {
   //     res.send(err ? err : result);
   //   });
   // });
+  app.get("/users", (req, res) => {
+    db.collection("users")
+      .find()
+      .toArray(function(err, results) {
+        res.send(err ? err : results);
+      });
+  });
 
-  app.get('/image/:id', (req, res) => {
-    const fileName = req.params.name;
-    fs.readFile(path.resolve() + '/uploads/' + fileName + '.jpg', (err, file) => {
-      if (err) res.status(500)
-    })
-  })
-
-  app.get('/users/:id', (req, res) => {
+  app.get("/users/:id", (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
+    const details = { _id: new ObjectID(id) };
 
-    db.collection('users').findOne(details, (err, item) => {
+    db.collection("users").findOne(details, (err, item) => {
       res.send(err ? err : item);
     });
   });
 
-  app.post('/users', (req, res) => {
-    if(!req.body) return res.sendStatus(400);
+  app.post("/users", (req, res) => {
+    if (!req.body) return res.sendStatus(400);
 
-    console.log(req.body);
     let users = req.body.map((elem, index) => {
       return {
-        name: elem.name || '',
-        station_mac: elem.station_mac || '',
-        first_time_seen: elem.first_time_seen || '',
-        last_time_seen: elem.last_time_seen || '',
-        power: elem.power || '',
-        packets: elem.packets || '',
-        bssid: elem.bssid || '',
-        essids: elem.essids || '',
-        text: elem.text || '',
-        text_color: elem.text_color || ''
-      }
+        name: elem.name || "",
+        station_mac: elem.station_mac || "",
+        text: elem.text || "",
+        text_color: elem.text_color || ""
+      };
     });
 
-    db.collection('users').insertMany(users, (err, result) => {
+    db.collection("users").insertMany(users, (err, result) => {
       res.send(err ? err : result.ops[0]);
     });
   });
 
-  app.patch('/users/:id/upload', (req, res) => {
+  app.patch("/users/:id/upload", (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).send('No files were uploaded.');
+      return res.status(400).send("No files were uploaded.");
     }
 
     let file = req.files.file;
-    let index = file.name.split('.').length - 1;
-    let fileFormat = file.name.split('.')[index];
+    let index = file.name.split(".").length - 1;
+    let fileFormat = file.name.split(".")[index];
 
-    file.mv(`${path.resolve()}/uploads/${req.params.id}.${fileFormat}`, function(err) {
-      if (err)
-        return res.status(500).send(err);
+    file.mv(
+      `${path.resolve()}/uploads/${req.params.id}.${fileFormat}`,
+      function(err) {
+        if (err) return res.status(500).send(err);
 
-      res.send('File uploaded!');
-    });
+        res.send("File uploaded!");
+      }
+    );
   });
 
-  app.put('/users/:id', (req, res) => {
+  app.put("/users/:id", (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
+    const details = { _id: new ObjectID(id) };
     const user = {
       name: req.body.name,
       station_mac: req.body.station_mac,
@@ -98,16 +93,16 @@ module.exports = function(app, db) {
       text_color: req.body.text_color
     };
 
-    db.collection('users').updateOne(details, user, (err, result) => {
+    db.collection("users").updateOne(details, user, (err, result) => {
       res.send(err ? err : user);
     });
   });
 
-  app.delete('/users/:id', (req, res) => {
+  app.delete("/users/:id", (req, res) => {
     const id = req.params.id;
-    const details = { '_id': new ObjectID(id) };
+    const details = { _id: new ObjectID(id) };
 
-    db.collection('users').deleteOne(details, (err, item) => {
+    db.collection("users").deleteOne(details, (err, item) => {
       res.send(err ? err : `User ${id} deleted!`);
     });
   });
