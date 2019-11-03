@@ -16,9 +16,7 @@
         socket.on('data-list', function(msg){
           $('#users').html('');
           console.log(msg);
-          msg.map((elem, index) => {
-            $('#users').append($('<li>').text(`user: ${elem.name} ${elem.station_mac} ${elem.essids}`));
-          });
+          $('#users').append($('<li>').text(`user: ${elem.name} ${elem.mac} ${elem.signal}`));
         });
       });
     </script>
